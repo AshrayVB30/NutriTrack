@@ -8,8 +8,6 @@ const Profile = () => {
     weight: "",
     height: "",
     gender: "Male",
-    activityLevel: "Moderate",
-    dailyCalories: "",
     goal: "Lose Weight",
     foodType: "Omnivore",
   });
@@ -37,7 +35,7 @@ const Profile = () => {
     setTimeout(() => {
       console.log("✅ Profile Saved:", profile);
       setLoading(false);
-      navigate("/welcome"); // Redirect to welcome page
+      navigate("/welcome"); 
     }, 1000);
   };
 
