@@ -44,12 +44,8 @@ NutriTrack aims to simplify nutrition management by allowing users to log their 
    npm run dev
 ```
 
----
-
 ### 🤝 Contributions
-Dumpa Revanth - @Revanthdumpa43
-Ashray V B - @AshrayVB30
-
----
+   Dumpa Revanth - @Revanthdumpa43
+   Ashray V B - @AshrayVB30
 
 
