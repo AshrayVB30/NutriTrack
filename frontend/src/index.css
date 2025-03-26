@@ -1,0 +1,143 @@
+/* ============================
+   Global Styles and Theme
+============================= */
+
+/* Light Mode - Default */
+body {
+  --bg-color: #d8f3dc; /* Light green background */
+  --element-bg: #95d5b2; /* Softer green for elements */
+  --text-color: #081c15; /* Dark green for text */
+  --highlight-color: #52b788; /* Accent green for buttons/highlights */
+  --footer-bg: #b7e4c7;
+  --card-bg: #f8f9fa;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s ease-in-out;
+}
+
+/* Dark Mode - When dark-mode class is applied to body */
+body.dark-mode {
+  --bg-color: #081c15; /* Deep green background */
+  --element-bg: #2d6a4f; /* Dark green for elements */
+  --text-color: #d8f3dc; /* Light green for text */
+  --highlight-color: #52b788; /* Same green highlight */
+  --footer-bg: #1b4332;
+  --card-bg: #1b4332;
+}
+
+/* Navbar Styles */
+.navbar {
+  background-color: var(--element-bg);
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+  color: var(--text-color);
+}
+
+.nav-link {
+  color: var(--text-color);
+  transition: color 0.3s ease-in-out;
+}
+
+.nav-link:hover {
+  color: var(--highlight-color);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  background: var(--element-bg);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.theme-toggle:hover {
+  background-color: var(--highlight-color);
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(to right, var(--element-bg), var(--highlight-color));
+  color: var(--text-color);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.6);
+}
+
+/* Card Styles */
+.feature-card {
+  background-color: var(--card-bg);
+  border-radius: 15px;
+  padding: 20px;
+  transition: all 0.3s ease-in-out;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Styles */
+.btn-signup {
+  background-color: var(--highlight-color);
+  color: white !important;
+  border-radius: 20px;
+  padding: 8px 20px;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.btn-signup:hover {
+  background-color: var(--text-color);
+  color: var(--bg-color) !important;
+  transform: scale(1.05);
+}
+
+/* Footer Styles */
+.footer {
+  background-color: var(--footer-bg);
+  color: var(--text-color);
+  padding: 20px 0;
+  text-align: center;
+  border-top: 1px solid var(--element-bg);
+}
+
+.footer a {
+  color: var(--highlight-color);
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+}
+
+.footer a:hover {
+  color: var(--text-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar-toggler {
+    margin-right: 10px;
+  }
+
+  .navbar-brand {
+    font-size: 1.5rem;
+  }
+
+  .theme-toggle {
+    position: absolute;
+    left: 15px;
+    top: 12px;
+  }
+
+  .btn-signup {
+    margin-top: 10px;
+    margin-left: 0;
+  }
+
+  .navbar-collapse {
+    text-align: center;
+  }
+}

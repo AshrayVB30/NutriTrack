@@ -1,0 +1,142 @@
+/* ============================
+   Sign Up Page Styles
+============================= */
+
+/* Background Gradient */
+.background-radial-gradient {
+  background: radial-gradient(circle at 50% 50%, var(--element-bg), var(--bg-color));
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* SignUp Card */
+.signup-card {
+  background: var(--card-bg);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(15px);
+  width: 100%;
+  max-width: 500px;
+  margin-top: 50px;
+  transition: background-color 0.3s ease-in-out, transform 0.3s;
+}
+
+/* Glass Effect */
+.bg-glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+/* Glass Effect for Dark Mode */
+body.dark-mode .bg-glass {
+  background: rgba(45, 106, 79, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+/* Title */
+.signup-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--text-color);
+  text-align: center;
+}
+
+/* Form Styles */
+.signup-form .form-control {
+  background-color: var(--element-bg);
+  color: var(--text-color);
+  border: 1px solid var(--highlight-color);
+  border-radius: 12px;
+  padding: 12px 15px;
+  font-size: 1rem;
+}
+
+.signup-form .form-control:focus {
+  border-color: var(--highlight-color);
+  box-shadow: 0 0 8px var(--highlight-color);
+  outline: none;
+}
+
+/* Error Message */
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: -10px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Button Styles */
+.btn-primary {
+  background-color: var(--highlight-color);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  transform: scale(1.05);
+}
+
+/* Social Login Buttons */
+.social-buttons {
+  margin-top: 10px;
+}
+
+/* Login Text */
+.login-text {
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.login-text a {
+  color: var(--highlight-color);
+  text-decoration: none;
+}
+
+.login-text a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .signup-card {
+    padding: 20px;
+    width: 90%;
+  }
+}
+
+
+.container {
+  max-width: 800px;
+  margin: auto;
+}
+
+.card {
+  border-radius: 12px;
+  background-color: #f8f9fa;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.text-primary {
+  color: #52b788;
+}
+
+a.text-primary:hover {
+  text-decoration: underline;
+}
+
+.footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #2d6a4f;
+  color: #d8f3dc;
+  margin-top: 50px;
+}

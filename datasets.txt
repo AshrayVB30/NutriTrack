@@ -1,0 +1,11 @@
+1. Daily Food & Nutrition Tracking
+	  > https://www.kaggle.com/datasets/adilshamim8/daily-food-and-nutrition-dataset
+
+2. Food-101 Nutritional Information
+	  > https://www.kaggle.com/datasets/sanadalali/food-101-nutritional-information
+
+3. Workout & Fitness Tracker Dataset
+	  > https://www.kaggle.com/datasets/adilshamim8/workout-and-fitness-tracker-data
+
+4. Indian Food Nutritional Values Dataset (2025)
+	  > https://www.kaggle.com/datasets/batthulavinay/indian-food-nutrition

@@ -1,0 +1,106 @@
+Food Item,Calories (kcal),Proteins (g),Carbs (g),Food Type,Tags
+Roti (Whole Wheat),130,4.2,24.5,Vegetarian,"Low Calories, High Carbs"
+Paratha,260,5.5,36.0,Vegetarian,"High Calories, High Carbs"
+Biryani (Chicken),290,11.0,34.0,Omnivores,"High Protein, High Calories"
+Dosa,168,4.5,31.0,Vegetarian,High Carbs
+Idli,130,3.2,28.0,Vegetarian,"Low Calories, High Carbs"
+Upma,192,4.5,30.0,Vegetarian,Moderate Calories
+Poha,180,3.2,28.0,Vegetarian,Low Calories
+Pav Bhaji,250,5.0,35.0,Vegetarian,"High Carbs, High Calories"
+Chole (Chickpeas Curry),145,8.9,22.0,Vegetarian,"High Protein, Low Calories"
+Rajma (Kidney Beans),140,9.0,23.0,Vegetarian,"High Protein, Low Calories"
+Sambar,90,3.5,12.0,Vegetarian,"Low Calories, Low Carbs"
+Pulao (Vegetable),200,4.5,36.0,Vegetarian,"Moderate Calories, High Carbs"
+Khichdi,120,4.0,22.0,Vegetarian,Low Calories
+Dal Tadka,150,6.5,20.0,Vegetarian,"High Protein, Low Carbs"
+Paneer (Cottage Cheese),265,18.3,1.2,Vegetarian,"High Protein, Low Carbs"
+Butter Chicken,320,14.5,14.0,Omnivores,"High Protein, High Calories"
+Fish Curry,180,20.0,5.0,Omnivores,"High Protein, Low Calories"
+Mutton Curry,280,18.2,8.0,Omnivores,"High Protein, High Calories"
+Chicken Tikka,180,19.0,4.5,Omnivores,"High Protein, Low Carbs"
+Aloo Gobi,110,2.5,18.0,Vegetarian,"Low Calories, High Carbs"
+Baingan Bharta,102,2.4,14.0,Vegetarian,"Low Calories, Low Carbs"
+Bhindi Masala,120,3.4,15.0,Vegetarian,Low Calories
+Palak Paneer,190,11.0,8.3,Vegetarian,"High Protein, Low Carbs"
+Dal Makhani,250,9.1,29.0,Vegetarian,"High Calories, High Carbs"
+Misal Pav,290,10.5,32.0,Vegetarian,High Calories
+Dhokla,160,4.9,25.0,Vegetarian,"Low Calories, High Carbs"
+Kachori,330,5.4,42.0,Vegetarian,"High Calories, High Carbs"
+Vada Pav,290,4.7,40.0,Vegetarian,"High Calories, High Carbs"
+Pani Puri (5 pieces),150,2.5,25.0,Vegetarian,"Low Calories, High Carbs"
+Jalebi,300,1.2,70.0,Vegetarian,"High Calories, High Sugar"
+Gulab Jamun (1 piece),175,2.5,25.0,Vegetarian,High Sugar
+Rasgulla (1 piece),120,2.7,25.0,Vegetarian,"Low Calories, High Sugar"
+Lassi,150,4.5,18.0,Vegetarian,"Low Calories, High Carbs"
+Buttermilk,45,3.4,4.8,Vegetarian,"Low Calories, Low Carbs"
+Mango Shake,150,3.2,28.0,Vegetarian,High Carbs
+Kheer,180,4.2,31.0,Vegetarian,"High Calories, High Carbs"
+Halwa,320,4.1,45.0,Vegetarian,High Calories
+Samosa,260,5.0,35.0,Vegetarian,"High Calories, High Carbs"
+Pakora,290,6.0,34.0,Vegetarian,"High Calories, High Carbs"
+Masala Dosa,200,5.5,40.0,Vegetarian,High Carbs
+Egg Curry,190,9.0,36.0,Omnivores,"High Protein, High Carbs"
+Pesarattu,190,6.2,25.0,Vegetarian,"Moderate Calories, High Carbs"
+Thalipeeth,210,3.5,32.0,Vegetarian,"High Protein, Low Carbs"
+Sev Puri,120,8.4,24.0,Vegetarian,High Carbs
+Dahi Vada,60,4.2,12.0,Vegetarian,"Low Calories, Low Carbs"
+Sprouts Salad,180,7.0,18.0,Vegetarian,"High Protein, Low Calories"
+Vegetable Kurma,90,4.0,34.0,Vegetarian,"High Protein, High Carbs"
+Ragi Dosa,150,5.5,32.0,Vegetarian,Low Calories
+Tomato Rice,180,3.6,45.0,Vegetarian,"Moderate Calories, High Carbs"
+Lemon Rice,130,4.4,35.0,Vegetarian,High Carbs
+Curd Rice,110,6.0,16.0,Vegetarian,Moderate Calories
+Avial,170,10.5,14.0,Vegan,Low Calories
+Egg Bhurji,210,12.4,3.5,Omnivores,"High Protein, Vegetables"
+Paneer Bhurji,320,22.0,10.0,Vegetarian,"High Protein, Low Carbs"
+Mutton Biryani,290,15.0,34.0,Omnivores,"High Protein, High Calories"
+Kheema Pav,200,22.0,28.0,Omnivores,"High Protein, High Calories"
+Fish Fry,220,5.5,36.0,Omnivores,"High Protein, High Carbs"
+Vegetable Biryani,80,8.5,10.0,Vegetarian,"High Protein, High Calories"
+Cabbage Poriyal,150,5.0,15.0,Vegetarian,"Low Calories, Low Carbs"
+Gobi Manchurian,450,6.2,48.0,Vegetarian,"Vegetables, High Carbs"
+Bajra Roti,110,3.2,22.5,Vegetarian,"Low Calories, High Fiber"
+Sarson Ka Saag,150,4.0,18.0,Vegetarian,"High Vitamins, Low Calories"
+Makki Ki Roti,180,5.0,32.0,Vegetarian,High Carbs
+Bread Omelette,250,12.0,28.0,Omnivore,High Protein
+Chicken Kebab,275,20.0,12.0,Omnivore,"High Protein, Low Carb"
+Keema Curry,320,22.0,10.0,Omnivore,"High Protein, High Calories"
+Fish Tikka,210,23.0,5.0,Omnivore,"High Protein, Low Carb"
+Chicken Biryani,300,16.0,35.0,Omnivore,High Calories
+Egg Paratha,280,11.5,34.0,Omnivore,"High Protein, High Carbs"
+Mushroom Masala,170,5.0,20.0,Vegetarian,"Low Calories, High Fiber"
+Malai Kofta,310,7.5,25.0,Vegetarian,"High Calories, High Fat"
+Gajar Halwa,320,6.0,45.0,Vegetarian,"High Calories, High Sugar"
+Methi Thepla,190,4.5,30.0,Vegetarian,Low Calories
+Hakka Noodles,250,8.0,40.0,Vegetarian,"High Carbs, Medium Protein"
+Vegetable Cutlet,200,4.0,28.0,Vegetarian,"Low Protein, High Carbs"
+Tandoori Chicken,270,25.0,8.0,Omnivore,"High Protein, Low Carb"
+Egg Bhurji,210,12.4,3.5,Omnivore,"High Protein, Low Carbs"
+Paneer Paratha,290,13.0,34.0,Vegetarian,"High Protein, High Calories"
+Doodh Peda,250,8.0,32.0,Vegetarian,"High Sugar, Medium Protein"
+Banana Smoothie,180,4.0,35.0,Vegan,"High Carbs, High Fiber"
+Palak Khichdi,150,6.5,25.0,Vegetarian,"Low Calories, High Fiber"
+Masala Poha,200,5.0,34.0,Vegetarian,"High Carbs, Low Protein"
+Thandai,180,4.5,24.0,Vegetarian,"High Fiber, Low Protein"
+Fruit Salad,90,1.5,22.0,Vegan,"Low Calories, High Fiber"
+Moong Dal Chilla,180,8.0,25.0,Vegetarian,"High Protein, Low Carb"
+Baked Fish,200,22.0,2.0,Omnivore,"High Protein, Low Carb"
+Pumpkin Curry,120,3.0,18.0,Vegan,"Low Calories, High Fiber"
+Rajma Galouti,210,9.5,28.0,Vegetarian,"High Protein, Low Fat"
+Vegetable Korma,150,5.5,25.0,Vegetarian,"High Fiber, Low Calories"
+Coconut Rice,220,4.0,38.0,Vegan,"High Carbs, Low Protein"
+Mutton Rogan Josh,350,24.0,10.0,Omnivore,"High Protein, High Calories"
+Veg Pulao,200,5.5,36.0,Vegan,"High Carbs, Low Protein"
+Sabudana Khichdi,230,3.0,42.0,Vegetarian,"High Carbs, Low Protein"
+Aloo Tikki,260,4.5,36.0,Vegetarian,"High Calories, High Carbs"
+Vegetable Sandwich,180,6.0,32.0,Vegetarian,"High Fiber, Low Calories"
+Egg Curry,190,9.0,36.0,Omnivore,"High Protein, Medium Carb"
+Pesarattu,190,6.2,25.0,Vegan,"High Protein, Low Carb"
+Thalipeeth,210,3.5,32.0,Vegetarian,Low Calories
+Ragi Dosa,150,5.5,32.0,Vegan,"Low Calories, High Fiber"
+Tomato Rice,180,3.6,45.0,Vegan,"High Carbs, Low Protein"
+Lemon Rice,130,4.4,35.0,Vegan,"High Carbs, Low Calories"
+Avial,170,10.5,14.0,Vegan,"High Fiber, Low Calories"
+Kothu Parotta,290,7.0,38.0,Vegetarian,"High Carbs, High Calories"
+Mysore Pak,320,6.5,44.0,Vegetarian,"High Sugar, High Calories"
+Vegetable Spring Roll,210,4.0,36.0,Vegan,"High Carbs, Low Protein"
