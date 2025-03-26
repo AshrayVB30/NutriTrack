@@ -44,8 +44,8 @@ NutriTrack aims to simplify nutrition management by allowing users to log their 
 
 
 ### 🤝 Contributions
-@AshrayVB30 
-
+Dumpa Revanth - @Revanthdumpa43
+Ashray V B - @AshrayVB30 
 ---
 
 ### 📄 License
