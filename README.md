@@ -3,11 +3,13 @@
 NutriTrack is a comprehensive nutrition tracking application designed to help users monitor their diet, track their calorie intake, and maintain a healthy lifestyle.
 
 ### 📁 Project Overview
+
 NutriTrack aims to simplify nutrition management by allowing users to log their meals, set dietary goals, and analyze their nutrition intake. The application can be used by individuals seeking weight management, athletes optimizing their diet, or anyone interested in better understanding their nutritional habits.
 
 ---
 
 ### 🚀 Features
+
 - Track daily meals and snacks
 - Log calories, proteins, fats, and carbohydrates
 - Set personalized dietary goals
@@ -17,6 +19,7 @@ NutriTrack aims to simplify nutrition management by allowing users to log their 
 ---
 
 ### 💻 Tech Stack
+
 - **Frontend:** React.js, Tailwind CSS
 - **Backend:** Node.js, Express.js
 - **Database:** MongoDB
@@ -26,6 +29,7 @@ NutriTrack aims to simplify nutrition management by allowing users to log their 
 ---
 
 ### 🔧 Installation & Setup
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/AshrayVB30/NutriTrack.git
@@ -38,17 +42,19 @@ NutriTrack aims to simplify nutrition management by allowing users to log their 
 3. Start the development server:
    ```bash
    npm run dev
-   ```
+```
 
 ---
-
 
 ### 🤝 Contributions
 Dumpa Revanth - @Revanthdumpa43
-Ashray V B - @AshrayVB30 
+Ashray V B - @AshrayVB30
+
 ---
 
 ### 📄 License
+
+---
 
 ---
 
