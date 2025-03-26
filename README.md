@@ -52,9 +52,4 @@ Ashray V B - @AshrayVB30
 
 ---
 
-### 📄 License
-
----
-
----
 
