@@ -1,12 +1,14 @@
-require("dotenv").config();
-const express = require("express");
-const mongoose = require("mongoose");
+import dotenv from 'dotenv';
+import express from 'express';
+import mongoose from 'mongoose';
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Load MongoDB URI from .env
-const MONGO_URL = process.env.MONGO_URL;
+const MONGO_URL = process.env.MONGO_URI;
 
 // Connect to MongoDB
 mongoose

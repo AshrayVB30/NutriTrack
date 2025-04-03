@@ -9,7 +9,6 @@ const Profile = () => {
     height: "",
     gender: "Male",
     goal: "Lose Weight",
-    foodType: "Omnivore",
   });
 
   const [error, setError] = useState("");
@@ -194,19 +193,6 @@ const Profile = () => {
               <option value="Other">⚧ Other</option>
             </select>
 
-            {/* Food Type Preference */}
-            <label className="form-label">🥗 Food Type Preference</label>
-            <select
-              name="foodType"
-              value={profile.foodType}
-              onChange={handleChange}
-              className="form-select"
-            >
-              <option value="Omnivore">🍖 Omnivore - All foods</option>
-              <option value="Vegetarian">🥦 Vegetarian - No meat</option>
-              <option value="Vegan">🌱 Vegan - Plant-based only</option>
-              <option value="Flexitarian">🍏 Flexitarian - Mostly plants</option>
-            </select>
 
             {/* Fitness Goal */}
             <label className="form-label">🏋️ Fitness Goal</label>
