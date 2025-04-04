@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
+import axios from "../utils/axios";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -15,12 +16,10 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false);
   const [isDarkMode] = useState(localStorage.getItem("theme") === "dark");
 
-  // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Password validation logic
   const validatePassword = (password) => {
     const lengthCheck = password.length >= 8;
     const upperCheck = /[A-Z]/.test(password);
@@ -36,8 +35,7 @@ const SignUp = () => {
     return "";
   };
 
-  // Handle Manual Sign-Up
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
 
     if (
@@ -63,14 +61,26 @@ const SignUp = () => {
     }
 
     setLoading(true);
-    setTimeout(() => {
-      console.log("User Signed Up:", formData);
-      setLoading(false);
+    setError("");
+
+    try {
+      const response = await axios.post("http://localhost:5000/api/auth/signup", {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      console.log("✅ Backend response:", response.data);
       navigate("/profile");
-    }, 1000);
+    } catch (err) {
+      console.error("❌ Error:", err);
+      setError(err.response?.data?.message || "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Apply Theme on Load
   useEffect(() => {
     document.body.className = isDarkMode ? "dark-mode" : "";
   }, [isDarkMode]);
@@ -78,7 +88,6 @@ const SignUp = () => {
   return (
     <>
       <style>{`
-        /* Global Theme Variables */
         :root {
           --bg-color: ${isDarkMode ? "#081c15" : "#d8f3dc"};
           --element-bg: ${isDarkMode ? "#2d6a4f" : "#95d5b2"};
@@ -87,7 +96,6 @@ const SignUp = () => {
           --card-bg: ${isDarkMode ? "#1b4332" : "#f8f9fa"};
         }
 
-        /* Body & Background */
         body {
           margin: 0;
           padding: 0;
@@ -97,7 +105,6 @@ const SignUp = () => {
           transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
         }
 
-        /* Page Layout */
         .background-radial-gradient {
           height: 100vh;
           display: flex;
@@ -110,7 +117,6 @@ const SignUp = () => {
           );
         }
 
-        /* Sign-Up Card */
         .signup-card {
           background-color: var(--card-bg);
           padding: 40px;
@@ -135,7 +141,6 @@ const SignUp = () => {
           margin-bottom: 20px;
         }
 
-        /* Form Styles */
         .signup-form .form-control {
           background-color: var(--element-bg);
           color: var(--text-color);
@@ -152,7 +157,6 @@ const SignUp = () => {
           outline: none;
         }
 
-        /* Error Message */
         .error-message {
           color: red;
           font-size: 0.9rem;
@@ -161,7 +165,6 @@ const SignUp = () => {
           margin-bottom: 15px;
         }
 
-        /* Sign Up Button */
         .btn-primary {
           background-color: var(--highlight-color);
           color: #fff;
@@ -178,12 +181,10 @@ const SignUp = () => {
           color: var(--bg-color);
         }
 
-        /* Social Buttons */
         .social-buttons {
           margin-top: 20px;
         }
 
-        /* Login Text */
         .login-text {
           margin-top: 15px;
           color: var(--text-color);
@@ -199,7 +200,6 @@ const SignUp = () => {
         }
       `}</style>
 
-      {/* Main Section */}
       <section className="background-radial-gradient">
         <div className="signup-card">
           <h2 className="signup-title">🚀 Create Your Account</h2>

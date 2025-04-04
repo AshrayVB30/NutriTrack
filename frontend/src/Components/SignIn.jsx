@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ const SignIn = () => {
   };
 
   // Handle Manual Sign-In
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
       setError("⚠️ Both email and password are required!");
@@ -51,12 +52,55 @@ const SignIn = () => {
 
     setLoading(true);
 
-    // Mock sign-in logic (replace with API call)
-    setTimeout(() => {
-      console.log("✅ User Signed In:", formData);
-      setLoading(false);
+    try {
+      // Connect to the backend
+      const response = await axios.post('http://localhost:5000/api/users/signin', {
+        email: formData.email,
+        password: formData.password
+      });      
+      
+      // Save user data and token to localStorage
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      
+      console.log("✅ User Signed In:", response.data.user);
       navigate("/profile");
-    }, 1000);
+    } catch (error) {
+      console.error("Login error:", error.response?.data || error.message);
+      setError(error.response?.data?.message || "❌ Login failed. Please check your credentials.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle Google Login
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setLoading(true);
+      
+      // Decode the Google credential to get user info
+      const decoded = jwt_decode(credentialResponse.credential);
+      
+      // Send Google info to your backend
+      const response = await axios.post('http://localhost:5000/api/users/google-auth', {
+        name: decoded.name,
+        email: decoded.email,
+        googleId: decoded.sub,
+        profilePicture: decoded.picture
+      });
+      
+      // Save user data and token to localStorage
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      
+      console.log("✅ Google User:", response.data.user);
+      navigate('/profile');
+    } catch (error) {
+      console.error("Google login error:", error);
+      setError("❌ Google Sign-In Failed! Try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Apply Theme on Load
@@ -200,7 +244,7 @@ const SignIn = () => {
       <section className="background-radial-gradient">
         <div className="signin-card">
           <h2 className="signin-title">👋 Welcome Back!</h2>
-          <p className="motivational-quote">“Every step you take is one step closer to your goal. Keep going! 🌟”</p>
+          <p className="motivational-quote">"Every step you take is one step closer to your goal. Keep going! 🌟"</p>
 
           {error && <p className="error-message">{error}</p>}
 
@@ -239,10 +283,7 @@ const SignIn = () => {
             <p>✨ or sign in with:</p>
             <div className="social-buttons">
               <GoogleLogin
-                onSuccess={(credentialResponse) => {
-                  console.log("Google User:", credentialResponse);
-                  navigate("/profile");
-                }}
+                onSuccess={handleGoogleSuccess}
                 onError={() => {
                   setError("❌ Google Sign-In Failed! Try again.");
                 }}
@@ -251,7 +292,7 @@ const SignIn = () => {
           </div>
 
           <p className="signup-text mt-3 text-center">
-            Don’t have an account? <a href="/signup">📝 Sign Up</a>
+            Don't have an account? <Link to="/signup">📝 Sign Up</Link>
           </p>
         </div>
       </section>
