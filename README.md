@@ -1,3 +1,8 @@
+Here’s the updated `README.md` with the new `### 🛠️ Backend` section added in the correct location, just before the `### 🤝 Contributions` section:
+
+---
+
+```md
 ## NutriTrack
 
 NutriTrack is a comprehensive nutrition tracking application designed to help users monitor their diet, track their calorie intake, and maintain a healthy lifestyle.
@@ -46,6 +51,71 @@ NutriTrack aims to simplify nutrition management by allowing users to log their 
 
 ---
 
+### 🛠️ Backend
+
+The backend of NutriTrack is built with **Node.js** and **Express.js**, connected to a **MongoDB** database. It handles user authentication, meal logging, and interaction with the nutrition data API.
+
+#### 🔒 Authentication
+
+- **JWT-based authentication** is used to protect user routes.
+- Users can register and log in with their credentials.
+
+#### 📦 Backend Folder Structure
+
+```
+/backend
+│
+├── controllers        # Business logic (userController.js, etc.)
+├── models             # Mongoose models (User.js, Meal.js, etc.)
+├── routes             # API routes (userRouter.js, mealRouter.js)
+├── middlewares        # Custom middleware (e.g., auth, cors)
+├── .env               # Environment variables
+├── index.js           # Entry point of the server
+```
+
+
+#### 📥 Installation & Running the Backend
+
+1. Navigate to the backend directory:
+
+   ```bash
+   cd backend
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Create a `.env` file and add your variables (see below)
+
+4. Start the server:
+
+   ```bash
+   npm run dev
+   ```
+
+   Or if using plain node:
+
+   ```bash
+   node index.js
+   ```
+
+---
+
+#### 🔐 .env File Format
+
+Create a `.env` file in the `/backend` folder with the following:
+
+```env
+PORT=5000
+MONGO_URI=mongodb+srv://<your_mongo_connection>
+JWT_SECRET=your_jwt_secret
+```
+
+---
+
 ### 🤝 Contributions
 
 Dumpa Revanth - @Revanthdumpa43  
@@ -56,3 +126,4 @@ Ashray V B - @AshrayVB30
 ### 📄 License
 
 ---
+```
