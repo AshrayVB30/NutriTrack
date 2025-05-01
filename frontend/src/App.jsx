@@ -8,6 +8,8 @@ import SignUp from "./Components/SignUp";
 import SignIn from "./Components/SignIn";
 import Profile from "./Components/Profile";
 import Welcome from "./Components/Welcome";
+import TermsOfService from "./Components/TermsOfService"
+import PrivacyPolicy from "./Components/PrivacyPolicy";
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/welcome" element={<Welcome />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>
