@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
-import axios from "axios";
+import axios from "../utils/axios";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -53,8 +53,8 @@ const SignIn = () => {
     setLoading(true);
 
     try {
-      // Connect to the backend
-      const response = await axios.post('http://localhost:5000/api/users/signin', {
+      // Connect to the backend using the custom axios instance
+      const response = await axios.post('/auth/signin', {
         email: formData.email,
         password: formData.password
       });      

@@ -1,42 +1,19 @@
 import express from 'express';
-import User from '../models/User.js';
-import bcrypt from 'bcryptjs';
+import { signUpUser, signInUser, saveUserProfile, getUserProfile } from '../controller/userController.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.post('/signup', async (req, res) => {
-  try {
-    const { firstName, lastName, email, password } = req.body;
+// Signin route
+router.post('/signin', signInUser);
 
-    // Validate input
-    if (!firstName || !lastName || !email || !password) {
-      return res.status(400).json({ message: "All fields are required." });
-    }
+// Signup route
+router.post('/signup', signUpUser);
 
-    // Check if user exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists." });
-    }
+// Get profile route (protected)
+router.get('/profile', protect, getUserProfile);
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create new user
-    const newUser = new User({
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
-    });
-
-    await newUser.save();
-
-    res.status(201).json({ message: "User registered successfully!" });
-  } catch (error) {
-    console.error("Signup error:", error);
-    res.status(500).json({ message: "Server error during signup." });
-  }
-});
+// Save profile route (protected)
+router.post('/profile', protect, saveUserProfile);
 
 export default router;

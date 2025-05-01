@@ -7,9 +7,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 
 // Custom middlewares & routes
-import corsMiddleware from './middlewares/cors.js'; // Custom CORS config (optional)
-import authRoutes from './routes/auth.js'; // 👈 Make sure this handles /signin and /signup
-import userRouter from './routes/userRouter.js'; // ✅ This handles /api/users
+import corsMiddleware from './middlewares/cors.js';
+import authRoutes from './routes/auth.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -20,8 +19,7 @@ app.use(express.json());
 app.use(corsMiddleware);
 
 // Routes
-app.use('/api/auth', authRoutes);      // e.g., /api/auth/signin
-app.use('/api/users', userRouter);     // e.g., /api/users/profile
+app.use('/api/auth', authRoutes);      // Handles /api/auth/signin and /api/auth/signup
 
 // Root test route
 app.get("/", (req, res) => {

@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 const userSchema = new mongoose.Schema({
@@ -21,24 +20,40 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Password is required'],
   },
+  // Profile fields
+  age: {
+    type: Number,
+    min: 1,
+  },
+  weight: {
+    type: Number,
+    min: 1,
+  },
+  height: {
+    type: Number,
+    min: 1,
+  },
+  gender: {
+    type: String,
+    enum: ['Male', 'Female', 'Other'],
+  },
+  goal: {
+    type: String,
+    enum: ['Lose Weight', 'Maintain Weight', 'Gain Muscle'],
+  }
 }, {
   timestamps: true,
 });
 
-// 🔐 Hash password before saving
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next(); // Only hash if password changed
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
-
-// 🔐 Compare entered password with hashed one
+// Compare entered password with stored plain text password
 userSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+  console.log('Comparing passwords...');
+  console.log('Entered password:', enteredPassword);
+  console.log('Stored password:', this.password);
+  return enteredPassword === this.password;
 };
 
-// 🔐 Generate JWT token
+// Generate JWT token
 userSchema.methods.generateToken = function () {
   return jwt.sign(
     { id: this._id, email: this.email },
