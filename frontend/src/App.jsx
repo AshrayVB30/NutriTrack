@@ -10,6 +10,7 @@ import Profile from "./Components/Profile";
 import Welcome from "./Components/Welcome";
 import TermsOfService from "./Components/TermsOfService"
 import PrivacyPolicy from "./Components/PrivacyPolicy";
+import Contact from "./Components/Contact";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/welcome" element={<Welcome />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>
