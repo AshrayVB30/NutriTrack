@@ -1,15 +1,13 @@
 // utils/axios.js
 import axios from 'axios';
 
-// ✅ Use VITE_API_URL from env
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api`,
+  baseURL: `${import.meta.env.VITE_API_URL}/api`, // ✅ Use actual API base URL
   headers: {
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
 });
 
-// Auth interceptor (unchanged)
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -21,14 +19,13 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Error handling interceptor (unchanged)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      // window.location.href = '/signin'; // optionally uncomment
+      // window.location.href = '/signin';
     }
     return Promise.reject(error);
   }
