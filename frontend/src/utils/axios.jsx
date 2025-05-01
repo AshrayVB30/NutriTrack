@@ -1,48 +1,35 @@
 // utils/axios.js
 import axios from 'axios';
 
-// Create a custom Axios instance
+// ✅ Use VITE_API_URL from env
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: `${import.meta.env.VITE_API_URL}/api`,
   headers: {
     'Content-Type': 'application/json'
   }
 });
 
-// Add a request interceptor for authentication
+// Auth interceptor (unchanged)
 api.interceptors.request.use(
   (config) => {
-    // Get token from localStorage
     const token = localStorage.getItem('token');
-    
-    // If token exists, add it to request headers
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-    
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Add a response interceptor for error handling
+// Error handling interceptor (unchanged)
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
-    // Handle authentication errors
     if (error.response && error.response.status === 401) {
-      // Clear local storage and redirect to login page if needed
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      
-      // You can redirect to login page here if using within a component
-      // window.location.href = '/signin';
+      // window.location.href = '/signin'; // optionally uncomment
     }
-    
     return Promise.reject(error);
   }
 );
