@@ -8,7 +8,7 @@ import SignUp from "./Components/SignUp";
 import SignIn from "./Components/SignIn";
 import Profile from "./Components/Profile";
 import Welcome from "./Components/Welcome";
-import TermsOfService from "./Components/TermsOfService";
+import TermsOfService from "./Components/TermsOfService"
 import PrivacyPolicy from "./Components/PrivacyPolicy";
 
 function App() {

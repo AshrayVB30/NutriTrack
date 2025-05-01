@@ -1,0 +1,15 @@
+services:
+  backend:
+    build: ./backend
+    container_name: nutritrack-backend
+    ports:
+      - "5000:5000"
+    environment:
+      MONGO_URI: "mongodb+srv://vbash2004:9lW7TBp8oCXCyo1Q@cluster0.46od5.mongodb.net/nutrition?retryWrites=true&w=majority"
+      PORT: "5000"
+
+  frontend:
+    build: ./frontend
+    container_name: nutritrack-frontend
+    ports:
+      - "3000:3000"

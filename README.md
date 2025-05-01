@@ -1,3 +1,7 @@
+Here’s an updated version of your `README.md` with a new section **📦 Docker Setup**, clearly describing how to run the NutriTrack app using Docker and Docker Compose:
+
+---
+
 ## NutriTrack
 
 NutriTrack is a comprehensive nutrition tracking application designed to help users monitor their diet, track their calorie intake, and maintain a healthy lifestyle.
@@ -10,35 +14,37 @@ NutriTrack aims to simplify nutrition management by allowing users to log their 
 
 ### 🚀 Features
 
-- Track daily meals and snacks
-- Log calories, proteins, fats, and carbohydrates
-- Set personalized dietary goals
-- View nutrition breakdown through charts and graphs
-- Analyze progress over time
+- Track daily meals and snacks  
+- Log calories, proteins, fats, and carbohydrates  
+- Set personalized dietary goals  
+- View nutrition breakdown through charts and graphs  
+- Analyze progress over time  
 
 ---
 
 ### 💻 Tech Stack
 
-- **Frontend:** React.js, Tailwind CSS
-- **Backend:** Node.js, Express.js
-- **Database:** MongoDB
-- **Authentication:** JWT
-- **API Integration:** Nutrition APIs for food data
+- **Frontend:** React.js, Tailwind CSS  
+- **Backend:** Node.js, Express.js  
+- **Database:** MongoDB (Atlas)  
+- **Authentication:** JWT  
+- **API Integration:** Nutrition APIs for food data  
 
 ---
 
-### 🔧 Installation & Setup
+### 🔧 Installation & Setup (Local)
 
 1. Clone the repository:
    ```bash
    git clone https://github.com/AshrayVB30/NutriTrack.git
    cd NutriTrack
    ```
+
 2. Install dependencies:
    ```bash
    npm install
    ```
+
 3. Start the development server:
    ```bash
    npm run dev
@@ -46,9 +52,41 @@ NutriTrack aims to simplify nutrition management by allowing users to log their 
 
 ---
 
+### 📦 Docker Setup (Recommended)
+
+NutriTrack supports containerization using **Docker** and **Docker Compose**.
+
+#### 🐳 Prerequisites
+
+- Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+#### 🏗️ Build & Run All Services
+
+```bash
+docker-compose up --build
+```
+
+#### 🌐 Access the App
+
+- Frontend: [http://localhost:3000](http://localhost:3000)  
+- Backend API: [http://localhost:5000](http://localhost:5000)
+
+#### 🛑 Stop Services
+
+```bash
+docker-compose down
+```
+
+#### 🧾 Notes
+
+- MongoDB Atlas is used as the cloud database. Update `MONGO_URI` in `backend/.env` accordingly.
+- CORS is configured to support both Vite (`localhost:5173`) and Docker frontend (`localhost:3000`).
+
+---
+
 ### 🛠️ Backend
 
-The backend of NutriTrack is built with **Node.js** and **Express.js**, connected to a **MongoDB** database. It handles user authentication, meal logging, and interaction with the nutrition data API.
+The backend of NutriTrack is built with **Node.js** and **Express.js**, connected to a **MongoDB Atlas** database. It handles user authentication, meal logging, and interaction with the nutrition data API.
 
 #### 🔒 Authentication
 
@@ -70,33 +108,19 @@ The backend of NutriTrack is built with **Node.js** and **Express.js**, connecte
 
 ---
 
-#### 📥 Installation & Running the Backend
+#### 📥 Installation & Running the Backend (Non-Docker)
 
-1. Navigate to the backend directory:
+```bash
+cd backend
+npm install
+npm run dev
+```
 
-   ```bash
-   cd backend
-   ```
+Or if using plain node:
 
-2. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-3. Create a `.env` file and add your variables (see below)
-
-4. Start the server:
-
-   ```bash
-   npm run dev
-   ```
-
-   Or if using plain node:
-
-   ```bash
-   node index.js
-   ```
+```bash
+node index.js
+```
 
 ---
 
@@ -114,11 +138,13 @@ JWT_SECRET=your_jwt_secret
 
 ### 🤝 Contributions
 
-Dumpa Revanth - @Revanthdumpa43\
-Ashray V B - @AshrayVB30
+Dumpa Revanth - [@Revanthdumpa43](https://github.com/Revanthdumpa43)  
+Ashray V B - [@AshrayVB30](https://github.com/AshrayVB30)
 
 ---
 
 ### 📄 License
+
+MIT License
 
 ---
