@@ -1,7 +1,3 @@
-Here’s an updated version of your `README.md` with a new section **📦 Docker Setup**, clearly describing how to run the NutriTrack app using Docker and Docker Compose:
-
----
-
 ## NutriTrack
 
 NutriTrack is a comprehensive nutrition tracking application designed to help users monitor their diet, track their calorie intake, and maintain a healthy lifestyle.
