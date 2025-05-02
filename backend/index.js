@@ -1,116 +1,66 @@
-// backend/index.js
-import axios from 'axios';
+// server.js - Main entry point for your backend
+import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Load environment variables
 dotenv.config();
 
-// Use process.env for Node.js environment (not import.meta.env which is Vite-specific)
-const API_URL = process.env.API_URL || 'http://localhost:5000';
+// Create Express app
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-const api = axios.create({
-  baseURL: `${API_URL}/api`,
-  headers: {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-  },
-  timeout: 60000,
-  withCredentials: false,
+// Configure __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors({
+  origin: process.env.FRONTEND_URL || '*',
+  credentials: true
+}));
+
+// Connect to MongoDB
+const MONGO_URI = process.env.MONGO_URI;
+if (MONGO_URI) {
+  mongoose.connect(MONGO_URI)
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('MongoDB connection error:', err));
+} else {
+  console.warn('MongoDB URI not provided in environment variables');
+}
+
+// Basic routes
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', message: 'Server is running' });
 });
 
-export const warmupServer = async () => {
-  try {
-    const response = await api.get('/warmup', { timeout: 10000 });
-    return response.data;
-  } catch (error) {
-    console.error('Warmup failed:', error);
-    return null;
-  }
-};
+app.get('/api/warmup', (req, res) => {
+  res.status(200).json({ status: 'ok', message: 'Server is warmed up' });
+});
 
-export const checkBackendHealth = async () => {
-  try {
-    const response = await api.get('/health', { timeout: 10000 });
-    return response.data;
-  } catch (error) {
-    console.error('Health check failed:', error);
-    return null;
-  }
-};
+// Your other routes would go here
+// app.use('/api/users', userRoutes);
+// app.use('/api/products', productRoutes);
 
-// For Node.js environment, we need to handle localStorage differently
-// since it's not available in Node
-const getToken = () => {
-  // If running in browser (unlikely for backend/index.js)
-  if (typeof localStorage !== 'undefined') {
-    return localStorage.getItem('token');
-  }
-  // If running in Node.js, we'd need a different approach to store tokens
-  // This might be session storage, a file, or another mechanism
-  return null;
-};
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ 
+    status: 'error', 
+    message: 'Something went wrong!',
+    error: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
+});
 
-const removeTokens = () => {
-  if (typeof localStorage !== 'undefined') {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-  }
-  // Implement alternative for Node.js if needed
-};
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
-api.interceptors.request.use(
-  async (config) => {
-    console.log('Making request to:', config.baseURL + config.url);
-    console.log('Request config:', config);
-
-    if (!config.url.includes('/warmup') && !config.url.includes('/health')) {
-      const health = await checkBackendHealth();
-      if (!health) await warmupServer();
-    }
-
-    const token = getToken();
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    if (error.response) {
-      console.error('Backend responded with error:', error.response.data);
-    } else if (error.request) {
-      if (error.code === 'ECONNABORTED') {
-        console.error('Timeout of', error.config.timeout, 'ms');
-
-        const warmup = await warmupServer();
-        if (!warmup) return Promise.reject(new Error('Backend server is not responding'));
-
-        if (error.config && !error.config.__isRetryRequest) {
-          error.config.__isRetryRequest = true;
-          try {
-            console.log('Retrying request...');
-            return await api(error.config);
-          } catch (retryError) {
-            return Promise.reject(retryError);
-          }
-        }
-      } else {
-        console.error('No response received:', error.request);
-      }
-    } else {
-      console.error('Request setup error:', error.message);
-    }
-
-    if (error.response?.status === 401) {
-      removeTokens();
-    }
-
-    return Promise.reject(error);
-  }
-);
-
-export default api;
+export default app;
