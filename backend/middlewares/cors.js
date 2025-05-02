@@ -21,4 +21,10 @@ const corsOptions = {
   preflightContinue: false
 };
 
-export default cors(corsOptions);
+// Debug middleware
+const corsMiddleware = (req, res, next) => {
+  console.log('CORS Middleware - Origin:', req.headers.origin);
+  cors(corsOptions)(req, res, next);
+};
+
+export default corsMiddleware;

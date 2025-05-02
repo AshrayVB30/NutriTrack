@@ -14,10 +14,11 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URL = process.env.MONGO_URI;
 
-// Debug middleware
+// Debug middleware for CORS
 app.use((req, res, next) => {
-  console.log(`Incoming ${req.method} request from ${req.headers.origin}`);
-  console.log('Headers:', req.headers);
+  console.log("👉 Request Origin:", req.headers.origin);
+  console.log("👉 Request Method:", req.method);
+  console.log("👉 Request Headers:", req.headers);
   next();
 });
 
@@ -27,18 +28,11 @@ app.use(corsMiddleware);
 // Parse JSON bodies
 app.use(express.json());
 
-// Handle preflight requests
-app.options('*', (req, res) => {
-  console.log('Handling preflight request');
-  res.header('Access-Control-Allow-Origin', 'https://nutritrackr.netlify.app');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.status(200).end();
-});
-
 // Routes
 app.use('/api/auth', authRoutes);      // Handles /api/auth/signin and /api/auth/signup
+
+// CORS preflight for all routes
+app.options('*', corsMiddleware);
 
 // Root test route
 app.get("/", (req, res) => {
