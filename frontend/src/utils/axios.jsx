@@ -1,15 +1,15 @@
 // utils/axios.js
 import axios from 'axios';
 
-// ✅ Use VITE_API_URL from env
+// ✅ Use the deployed backend URL
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api`,
+  baseURL: 'https://nutritrack-backend.onrender.com/api',
   headers: {
     'Content-Type': 'application/json'
   }
 });
 
-// Auth interceptor (unchanged)
+// Auth interceptor
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -21,7 +21,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Error handling interceptor (unchanged)
+// Error handling interceptor
 api.interceptors.response.use(
   (response) => response,
   (error) => {

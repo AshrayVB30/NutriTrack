@@ -18,6 +18,8 @@ const MONGO_URL = process.env.MONGO_URI;
 app.use(express.json());
 app.use(corsMiddleware);
 
+// Handle preflight requests
+app.options('*', corsMiddleware);
 
 // Routes
 app.use('/api/auth', authRoutes);      // Handles /api/auth/signin and /api/auth/signup
@@ -25,6 +27,12 @@ app.use('/api/auth', authRoutes);      // Handles /api/auth/signin and /api/auth
 // Root test route
 app.get("/", (req, res) => {
   res.send("<h1>✅ Backend is Connected Successfully!</h1>");
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something went wrong!' });
 });
 
 // Connect to MongoDB and start server
