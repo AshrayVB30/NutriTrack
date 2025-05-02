@@ -1,38 +1,13 @@
 // backend/middlewares/cors.js
 import cors from 'cors';
 
+// More permissive CORS configuration
 const corsOptions = {
-  origin: function (origin, callback) {
-    const allowedOrigins = [
-      'https://nutritrackr.netlify.app',
-      'http://localhost:3000',
-      'http://localhost:5173'
-    ];
-    
-    // Allow requests with no origin (like mobile apps or curl)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      console.log('Blocked CORS request from:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: '*', // Allow all origins
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: [
-    'Content-Type',
-    'Authorization',
-    'X-Requested-With',
-    'Accept',
-    'Origin',
-    'Access-Control-Allow-Origin',
-    'Access-Control-Allow-Headers',
-    'Access-Control-Allow-Methods',
-    'Access-Control-Allow-Credentials'
-  ],
-  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  allowedHeaders: '*',
+  exposedHeaders: '*',
   maxAge: 600,
   optionsSuccessStatus: 200,
   preflightContinue: false
@@ -41,11 +16,29 @@ const corsOptions = {
 // Create the CORS middleware
 const corsMiddleware = cors(corsOptions);
 
-// Add debug logging
+// Add detailed debug logging
 const debugCors = (req, res, next) => {
-  console.log('CORS Debug - Origin:', req.headers.origin);
-  console.log('CORS Debug - Method:', req.method);
-  console.log('CORS Debug - Headers:', req.headers);
+  // Log all incoming requests
+  console.log('\n=== CORS Debug ===');
+  console.log('Time:', new Date().toISOString());
+  console.log('Method:', req.method);
+  console.log('URL:', req.url);
+  console.log('Origin:', req.headers.origin);
+  console.log('Headers:', JSON.stringify(req.headers, null, 2));
+  
+  // Add CORS headers manually
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+  res.header('Access-Control-Allow-Headers', '*');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    console.log('Handling preflight request');
+    res.status(200).end();
+    return;
+  }
+  
   corsMiddleware(req, res, next);
 };
 
