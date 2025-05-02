@@ -1,89 +1,90 @@
-// Load environment variables
-import dotenv from 'dotenv';
-dotenv.config();
+// utils/axios.js
+import axios from 'axios';
 
-// Core modules
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
-
-// Custom middleware & routes
-import corsMiddleware from './middlewares/cors.js';
-import authRoutes from './routes/auth.js';
-import userRoutes from './routes/userRouter.js';
-
-const app = express();
-const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI;
-
-// Basic CORS pre-setup (handle OPTIONS requests before routes)
-app.options('*', corsMiddleware);
-
-// Use middleware
-app.use(corsMiddleware);
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// Health & test endpoints
-app.get('/warmup', (req, res) => {
-  res.status(200).json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    mongoStatus: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
-  });
+const api = axios.create({
+  baseURL: `${import.meta.env.VITE_API_URL}/api`,
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
+  timeout: 60000,
+  withCredentials: false,
 });
 
-app.get('/health', (req, res) => {
-  res.status(200).json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    mongoStatus: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
-  });
-});
-
-// Root route
-app.get("/", (req, res) => {
-  res.json({ 
-    message: '✅ NutriTrack backend is running!',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime()
-  });
-});
-
-// Routes
-app.use('/api/auth', authRoutes);  // /signup, /signin, etc.
-app.use('/api/user', userRoutes);  // /signup, /signin, etc.
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error('❌ Server Error:', err.message);
-  res.status(err.status || 500).json({
-    success: false,
-    error: err.name || 'Server Error',
-    message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong',
-  });
-});
-
-// MongoDB connection + retry logic
-const connectWithRetry = async () => {
+export const warmupServer = async () => {
   try {
-    await mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000,
-    });
-    console.log('✅ Connected to MongoDB');
-  } catch (err) {
-    console.error('❌ MongoDB connection failed. Retrying in 5 seconds...');
-    setTimeout(connectWithRetry, 5000);
+    const response = await api.get('/warmup', { timeout: 10000 });
+    return response.data;
+  } catch (error) {
+    console.error('Warmup failed:', error);
+    return null;
   }
 };
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  connectWithRetry();
-});
+export const checkBackendHealth = async () => {
+  try {
+    const response = await api.get('/health', { timeout: 10000 });
+    return response.data;
+  } catch (error) {
+    console.error('Health check failed:', error);
+    return null;
+  }
+};
+
+api.interceptors.request.use(
+  async (config) => {
+    console.log('Making request to:', config.baseURL + config.url);
+    console.log('Request config:', config);
+
+    if (!config.url.includes('/warmup') && !config.url.includes('/health')) {
+      const health = await checkBackendHealth();
+      if (!health) await warmupServer();
+    }
+
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response) {
+      console.error('Backend responded with error:', error.response.data);
+    } else if (error.request) {
+      if (error.code === 'ECONNABORTED') {
+        console.error('Timeout of', error.config.timeout, 'ms');
+
+        const warmup = await warmupServer();
+        if (!warmup) return Promise.reject(new Error('Backend server is not responding'));
+
+        if (error.config && !error.config.__isRetryRequest) {
+          error.config.__isRetryRequest = true;
+          try {
+            console.log('Retrying request...');
+            return await api(error.config);
+          } catch (retryError) {
+            return Promise.reject(retryError);
+          }
+        }
+      } else {
+        console.error('No response received:', error.request);
+      }
+    } else {
+      console.error('Request setup error:', error.message);
+    }
+
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+export default api;
