@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -19,6 +20,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Password is required'],
+    minlength: [6, 'Password must be at least 6 characters long'],
   },
   // Profile fields
   age: {
@@ -45,12 +47,31 @@ const userSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-// Compare entered password with stored plain text password
+// Hash password before saving
+userSchema.pre('save', async function (next) {
+  // Only hash the password if it's modified or new
+  if (!this.isModified('password')) {
+    return next();
+  }
+
+  try {
+    // Generate salt
+    const salt = await bcrypt.genSalt(10);
+    // Hash password with salt
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Compare entered password with hashed password
 userSchema.methods.matchPassword = async function (enteredPassword) {
-  console.log('Comparing passwords...');
-  console.log('Entered password:', enteredPassword);
-  console.log('Stored password:', this.password);
-  return enteredPassword === this.password;
+  try {
+    return await bcrypt.compare(enteredPassword, this.password);
+  } catch (error) {
+    throw new Error('Error comparing passwords');
+  }
 };
 
 // Generate JWT token

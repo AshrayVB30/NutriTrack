@@ -4,6 +4,12 @@ import User from '../models/User.js';
 export const signInUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+    
+    // Input validation
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+
     const cleanEmail = email.trim().toLowerCase();
     const cleanPassword = password.trim();
 
@@ -40,6 +46,16 @@ export const signInUser = async (req, res) => {
 export const signUpUser = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
+
+    // Input validation
+    if (!firstName || !lastName || !email || !password) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+    }
+
     const cleanEmail = email.trim().toLowerCase();
     const cleanPassword = password.trim();
 
@@ -51,8 +67,8 @@ export const signUpUser = async (req, res) => {
 
     // Create new user - password will be hashed by the pre-save middleware
     const user = await User.create({
-      firstName,
-      lastName,
+      firstName: firstName.trim(),
+      lastName: lastName.trim(),
       email: cleanEmail,
       password: cleanPassword,
     });
