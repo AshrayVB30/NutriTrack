@@ -8,49 +8,47 @@ const api = axios.create({
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   },
-  timeout: 30000, // 30 seconds timeout
+  timeout: 60000, // 60 seconds timeout
   withCredentials: false, // Set to false since we're using wildcard CORS
   retry: 3, // Number of retries
-  retryDelay: 1000 // Delay between retries in milliseconds
+  retryDelay: 2000 // Delay between retries in milliseconds
 });
 
-// Add retry interceptor
-api.interceptors.response.use(null, async (error) => {
-  const { config } = error;
-  
-  // If config doesn't exist or retry option is not set, reject
-  if (!config || !config.retry) {
-    return Promise.reject(error);
+// Warmup function to wake up the server
+export const warmupServer = async () => {
+  try {
+    const response = await api.get('/warmup', { timeout: 10000 });
+    return response.data;
+  } catch (error) {
+    console.error('Warmup failed:', error);
+    return null;
   }
+};
 
-  // Set variable for keeping track of retry count
-  config.__retryCount = config.__retryCount || 0;
-
-  // Check if we've maxed out the total number of retries
-  if (config.__retryCount >= config.retry) {
-    return Promise.reject(error);
+// Health check function with timeout
+export const checkBackendHealth = async () => {
+  try {
+    const response = await api.get('/health', { timeout: 10000 });
+    return response.data;
+  } catch (error) {
+    console.error('Health check failed:', error);
+    return null;
   }
-
-  // Increase the retry count
-  config.__retryCount += 1;
-
-  // Create new promise to see which to retry the request
-  const backoff = new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, config.retryDelay || 1000);
-  });
-
-  // Return the promise in which recalls axios to retry the request
-  await backoff;
-  return api(config);
-});
+};
 
 // Request interceptor
 api.interceptors.request.use(
-  (config) => {
+  async (config) => {
     console.log('Making request to:', config.url);
     console.log('Request config:', config);
+    
+    // If it's not a warmup or health check request, ensure server is warmed up
+    if (!config.url.includes('/warmup') && !config.url.includes('/health')) {
+      const health = await checkBackendHealth();
+      if (!health) {
+        await warmupServer();
+      }
+    }
     
     const token = localStorage.getItem('token');
     if (token) {
@@ -64,13 +62,13 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor
+// Response interceptor with improved error handling
 api.interceptors.response.use(
   (response) => {
     console.log('Response received:', response);
     return response;
   },
-  (error) => {
+  async (error) => {
     console.error('Response error:', error);
     
     if (error.response) {
@@ -82,6 +80,29 @@ api.interceptors.response.use(
     } else if (error.request) {
       // The request was made but no response was received
       console.error('No response received:', error.request);
+      
+      // Check if it's a timeout error
+      if (error.code === 'ECONNABORTED') {
+        console.error('Request timed out after', error.config.timeout, 'ms');
+        
+        // Try to warm up the server
+        const warmup = await warmupServer();
+        if (!warmup) {
+          return Promise.reject(new Error('Backend server is not responding'));
+        }
+        
+        // If warmup succeeds, retry the request
+        if (error.config && !error.config.__isRetryRequest) {
+          error.config.__isRetryRequest = true;
+          try {
+            console.log('Retrying request...');
+            return await api(error.config);
+          } catch (retryError) {
+            console.error('Retry failed:', retryError);
+            return Promise.reject(retryError);
+          }
+        }
+      }
     } else {
       // Something happened in setting up the request that triggered an Error
       console.error('Error message:', error.message);
@@ -90,7 +111,6 @@ api.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      // window.location.href = '/signin'; // optionally uncomment
     }
     
     return Promise.reject(error);
