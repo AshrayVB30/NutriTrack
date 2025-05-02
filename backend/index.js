@@ -1,8 +1,15 @@
-// utils/axios.js
+// backend/index.js
 import axios from 'axios';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
+
+// Use process.env for Node.js environment (not import.meta.env which is Vite-specific)
+const API_URL = process.env.API_URL || 'http://localhost:5000';
 
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api`,
+  baseURL: `${API_URL}/api`,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -31,6 +38,26 @@ export const checkBackendHealth = async () => {
   }
 };
 
+// For Node.js environment, we need to handle localStorage differently
+// since it's not available in Node
+const getToken = () => {
+  // If running in browser (unlikely for backend/index.js)
+  if (typeof localStorage !== 'undefined') {
+    return localStorage.getItem('token');
+  }
+  // If running in Node.js, we'd need a different approach to store tokens
+  // This might be session storage, a file, or another mechanism
+  return null;
+};
+
+const removeTokens = () => {
+  if (typeof localStorage !== 'undefined') {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  }
+  // Implement alternative for Node.js if needed
+};
+
 api.interceptors.request.use(
   async (config) => {
     console.log('Making request to:', config.baseURL + config.url);
@@ -41,7 +68,7 @@ api.interceptors.request.use(
       if (!health) await warmupServer();
     }
 
-    const token = localStorage.getItem('token');
+    const token = getToken();
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
@@ -79,8 +106,7 @@ api.interceptors.response.use(
     }
 
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      removeTokens();
     }
 
     return Promise.reject(error);
