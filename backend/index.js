@@ -14,19 +14,18 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URL = process.env.MONGO_URI;
 
-// Debug middleware for CORS
-app.use((req, res, next) => {
-  console.log("👉 Request Origin:", req.headers.origin);
-  console.log("👉 Request Method:", req.method);
-  console.log("👉 Request Headers:", req.headers);
-  next();
-});
-
 // Apply CORS middleware first
 app.use(corsMiddleware);
 
 // Parse JSON bodies
 app.use(express.json());
+
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  console.log('Headers:', req.headers);
+  next();
+});
 
 // Routes
 app.use('/api/auth', authRoutes);      // Handles /api/auth/signin and /api/auth/signup
@@ -42,7 +41,17 @@ app.get("/", (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
-  res.status(500).json({ message: 'Something went wrong!' });
+  if (err.name === 'CorsError') {
+    res.status(403).json({ 
+      message: 'CORS Error',
+      details: err.message 
+    });
+  } else {
+    res.status(500).json({ 
+      message: 'Something went wrong!',
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
+  }
 });
 
 // Connect to MongoDB and start server
