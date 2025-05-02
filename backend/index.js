@@ -14,12 +14,28 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URL = process.env.MONGO_URI;
 
-// Middleware
-app.use(express.json());
+// Debug middleware
+app.use((req, res, next) => {
+  console.log(`Incoming ${req.method} request from ${req.headers.origin}`);
+  console.log('Headers:', req.headers);
+  next();
+});
+
+// Apply CORS middleware first
 app.use(corsMiddleware);
 
+// Parse JSON bodies
+app.use(express.json());
+
 // Handle preflight requests
-app.options('*', corsMiddleware);
+app.options('*', (req, res) => {
+  console.log('Handling preflight request');
+  res.header('Access-Control-Allow-Origin', 'https://nutritrackr.netlify.app');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.status(200).end();
+});
 
 // Routes
 app.use('/api/auth', authRoutes);      // Handles /api/auth/signin and /api/auth/signup
@@ -31,7 +47,7 @@ app.get("/", (req, res) => {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error('Error:', err);
   res.status(500).json({ message: 'Something went wrong!' });
 });
 
