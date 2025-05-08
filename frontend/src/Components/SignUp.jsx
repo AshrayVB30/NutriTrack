@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "../utils/axios";
 
 const SignUp = () => {
@@ -71,7 +70,13 @@ const SignUp = () => {
         password: formData.password,
       });
 
+      // Save user data and token to localStorage
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+
       console.log("✅ Backend response:", response.data);
+      
+      // Navigate to profile page for new users
       navigate("/profile");
     } catch (err) {
       console.error("❌ Error:", err);
@@ -181,10 +186,6 @@ const SignUp = () => {
           color: var(--bg-color);
         }
 
-        .social-buttons {
-          margin-top: 20px;
-        }
-
         .login-text {
           margin-top: 15px;
           color: var(--text-color);
@@ -270,23 +271,8 @@ const SignUp = () => {
             </div>
           </form>
 
-          <div className="text-center mt-4">
-            <p>or sign up with:</p>
-            <div className="social-buttons">
-              <GoogleLogin
-                onSuccess={(credentialResponse) => {
-                  console.log("Google User:", credentialResponse);
-                  navigate("/profile");
-                }}
-                onError={() => {
-                  setError("Google Sign-In Failed! Try again.");
-                }}
-              />
-            </div>
-          </div>
-
           <p className="login-text mt-3 text-center">
-            Already have an account? <a href="/signin">Sign In 🔍</a>
+            Already have an account? <Link to="/signin">Sign In 🔍</Link>
           </p>
         </div>
       </section>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
 import axios from "../utils/axios";
 
 const SignIn = () => {
@@ -64,40 +63,12 @@ const SignIn = () => {
       localStorage.setItem('user', JSON.stringify(response.data.user));
       
       console.log("✅ User Signed In:", response.data.user);
-      navigate("/profile");
+      
+      // Navigate to welcome page for existing users
+      navigate("/welcome");
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);
       setError(error.response?.data?.message || "❌ Login failed. Please check your credentials.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Handle Google Login
-  const handleGoogleSuccess = async (credentialResponse) => {
-    try {
-      setLoading(true);
-      
-      // Decode the Google credential to get user info
-      const decoded = jwt_decode(credentialResponse.credential);
-      
-      // Send Google info to your backend
-      const response = await axios.post('http://localhost:5000/api/users/google-auth', {
-        name: decoded.name,
-        email: decoded.email,
-        googleId: decoded.sub,
-        profilePicture: decoded.picture
-      });
-      
-      // Save user data and token to localStorage
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      
-      console.log("✅ Google User:", response.data.user);
-      navigate('/profile');
-    } catch (error) {
-      console.error("Google login error:", error);
-      setError("❌ Google Sign-In Failed! Try again.");
     } finally {
       setLoading(false);
     }
@@ -213,11 +184,6 @@ const SignIn = () => {
           color: var(--bg-color);
         }
 
-        /* Social Buttons */
-        .social-buttons {
-          margin-top: 20px;
-        }
-
         /* Signup Text */
         .signup-text {
           margin-top: 15px;
@@ -278,18 +244,6 @@ const SignIn = () => {
               </button>
             </div>
           </form>
-
-          <div className="text-center mt-4">
-            <p>✨ or sign in with:</p>
-            <div className="social-buttons">
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={() => {
-                  setError("❌ Google Sign-In Failed! Try again.");
-                }}
-              />
-            </div>
-          </div>
 
           <p className="signup-text mt-3 text-center">
             Don't have an account? <Link to="/signup">📝 Sign Up</Link>

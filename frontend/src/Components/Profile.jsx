@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "../utils/axios";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -79,34 +80,35 @@ const Profile = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/profile', {
-        method: 'POST',
+      const response = await axios.post('/auth/profile', {
+        ...profile
+      }, {
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(profile)
+        }
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to save profile');
-      }
-
-      console.log("✅ Profile Saved:", data.profile);
+      console.log("✅ Profile Saved:", response.data.profile);
       setLoading(false);
+      
+      // New users create a profile and then go to welcome page
       navigate("/welcome");
     } catch (error) {
       console.error("❌ Error saving profile:", error);
-      setError(error.message);
+      setError(error.response?.data?.message || "Failed to save profile");
       setLoading(false);
     }
   };
 
   useEffect(() => {
     document.body.className = isDarkMode ? "dark-mode" : "";
-  }, [isDarkMode]);
+    
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/signin');
+    }
+  }, [isDarkMode, navigate]);
 
   return (
     <>
@@ -163,6 +165,10 @@ const Profile = () => {
           padding: 12px 20px;
           font-size: 1rem;
           cursor: pointer;
+        }
+        .btn-primary:hover {
+          background-color: var(--text-color);
+          color: var(--bg-color);
         }
         .error-message {
           color: red;
