@@ -1,21 +1,21 @@
 // utils/axios.js
 import axios from 'axios';
 
-// ✅ Use environment variable for baseURL
+// ✅ Force localhost URL for development
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api`,
+  baseURL: 'http://localhost:5000',
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   },
-  timeout: 60000,
+  timeout: 10000,
   withCredentials: false
 });
 
 // Warmup function
 export const warmupServer = async () => {
   try {
-    const response = await api.get('/warmup', { timeout: 10000 });
+    const response = await api.get('/api/warmup');
     return response.data;
   } catch (error) {
     console.error('Warmup failed:', error);
@@ -26,7 +26,7 @@ export const warmupServer = async () => {
 // Health check function
 export const checkBackendHealth = async () => {
   try {
-    const response = await api.get('/health', { timeout: 10000 });
+    const response = await api.get('/api/health');
     return response.data;
   } catch (error) {
     console.error('Health check failed:', error);

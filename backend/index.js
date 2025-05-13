@@ -5,6 +5,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import authRoutes from './routes/auth.js';
 
 // Load environment variables
 dotenv.config();
@@ -21,8 +22,10 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
-  credentials: true
+  origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Connect to MongoDB
@@ -44,9 +47,8 @@ app.get('/api/warmup', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Server is warmed up' });
 });
 
-// Your other routes would go here
-// app.use('/api/users', userRoutes);
-// app.use('/api/products', productRoutes);
+// Mount user routes
+app.use('/api/auth', authRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -55,6 +57,14 @@ app.use((err, req, res, next) => {
     status: 'error', 
     message: 'Something went wrong!',
     error: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({
+    status: 'error',
+    message: `Cannot ${req.method} ${req.originalUrl}`
   });
 });
 

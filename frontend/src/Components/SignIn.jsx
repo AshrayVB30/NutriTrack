@@ -53,7 +53,7 @@ const SignIn = () => {
 
     try {
       // Connect to the backend using the custom axios instance
-      const response = await axios.post('/auth/signin', {
+      const response = await axios.post('/api/auth/signin', {
         email: formData.email,
         password: formData.password
       });      

@@ -63,7 +63,7 @@ const SignUp = () => {
     setError("");
 
     try {
-      const response = await axios.post("/auth/signup", {
+      const response = await axios.post("/api/auth/signup", {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,

@@ -1,30 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Line } from "react-chartjs-2";
+import { Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  Title,
+  ArcElement,
   Tooltip,
   Legend,
 } from "chart.js";
+import { useNavigate, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import api from "../utils/axios";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 // Register chart elements
 ChartJS.register(
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  Title,
+  ArcElement,
   Tooltip,
   Legend
 );
 
 const Welcome = () => {
+  const navigate = useNavigate();
   const [isDarkMode] = useState(localStorage.getItem("theme") === "dark");
+  const [user, setUser] = useState(null);
 
   // Water Intake States
   const [waterIntake, setWaterIntake] = useState(0);
@@ -103,6 +100,92 @@ const Welcome = () => {
       }
     ],
   });
+
+  // Pie chart data state
+  const [pieData, setPieData] = useState({
+    labels: ['Calories', 'Protein', 'Carbs', 'Water'],
+    datasets: [
+      {
+        data: [
+          totalCaloriesConsumed,
+          proteinIntake,
+          carbsIntake,
+          waterIntake
+        ],
+        backgroundColor: [
+          '#ff6b6b',
+          '#48cae4',
+          '#ffba08',
+          '#52b788'
+        ],
+        borderColor: [
+          '#ff6b6b',
+          '#48cae4',
+          '#ffba08',
+          '#52b788'
+        ],
+        borderWidth: 1,
+      },
+    ],
+  });
+
+  // Fetch user info on component mount
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/signin');
+      return;
+    }
+
+    const fetchUserInfo = async () => {
+      try {
+        const response = await api.get('/api/auth/profile');
+        setUser(response.data.user);
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+      }
+    };
+
+    fetchUserInfo();
+  }, [navigate]);
+
+  const handleLogout = () => {
+    // Show confirmation dialog
+    if (window.confirm('Are you sure you want to logout?')) {
+      // Clear all user data from localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      
+      // Clear any other app state
+      setUser(null);
+      setWaterIntake(0);
+      setProteinIntake(0);
+      setCarbsIntake(0);
+      setMealLogs({
+        Breakfast: [],
+        Lunch: [],
+        Dinner: [],
+        Snacks: [],
+      });
+      
+      // Navigate to signin page
+      navigate('/signin');
+    }
+  };
+
+  const pieOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "Nutrition Distribution"
+      }
+    }
+  };
 
   // Generate labels based on time period
   const generateLabels = (period) => {
@@ -253,6 +336,39 @@ const Welcome = () => {
     });
   }, [timePeriod, totalCaloriesConsumed, proteinIntake, carbsIntake, waterIntake]);
 
+  // Update pie chart data based on time period
+  useEffect(() => {
+    const data = generateData(timePeriod);
+    const lastDataPoint = data[data.length - 1];
+
+    setPieData({
+      labels: ['Calories', 'Protein', 'Carbs', 'Water'],
+      datasets: [
+        {
+          data: [
+            lastDataPoint.calories,
+            lastDataPoint.protein,
+            lastDataPoint.carbs,
+            lastDataPoint.water
+          ],
+          backgroundColor: [
+            '#ff6b6b',
+            '#48cae4',
+            '#ffba08',
+            '#52b788'
+          ],
+          borderColor: [
+            '#ff6b6b',
+            '#48cae4',
+            '#ffba08',
+            '#52b788'
+          ],
+          borderWidth: 1,
+        },
+      ],
+    });
+  }, [timePeriod, totalCaloriesConsumed, proteinIntake, carbsIntake, waterIntake]);
+
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -320,8 +436,66 @@ const Welcome = () => {
           background-color: var(--bg-color);
           color: var(--text-color);
         }
+        .navbar {
+          background-color: var(--card-bg);
+          padding: 1rem 2rem;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 1000;
+        }
+        .navbar-brand {
+          color: var(--text-color);
+          font-weight: bold;
+          font-size: 1.5rem;
+          text-decoration: none;
+        }
+        .user-info {
+          color: var(--text-color);
+          margin-right: 1.5rem;
+          font-size: 1.1rem;
+          display: flex;
+          align-items: center;
+          background-color: var(--element-bg);
+          padding: 0.5rem 1rem;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .user-info i {
+          margin-right: 0.5rem;
+          color: var(--highlight-color);
+          font-size: 1.2rem;
+        }
+        .user-name {
+          font-weight: 600;
+          color: var(--highlight-color);
+        }
+        .logout-btn {
+          background-color: var(--highlight-color);
+          color: white;
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 5px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          transition: all 0.3s ease;
+          text-decoration: none;
+        }
+        .logout-btn:hover {
+          background-color: var(--text-color);
+          color: var(--bg-color);
+          transform: translateY(-2px);
+        }
+        .logout-btn i {
+          font-size: 1.1rem;
+        }
         .section-container {
           padding: 2rem;
+          margin-top: 80px; /* Add margin to account for fixed navbar */
         }
         .card {
           background-color: var(--card-bg);
@@ -334,6 +508,34 @@ const Welcome = () => {
           background-color: var(--highlight-color);
         }
       `}</style>
+
+      {/* Navbar */}
+      <nav className="navbar">
+        <div className="container d-flex justify-content-between align-items-center">
+          {/* Brand Logo */}
+          <Link to="/" className="navbar-brand">
+            NutriTrack
+          </Link>
+
+          {/* User Info and Logout */}
+          <div className="d-flex align-items-center">
+            {user && (
+              <span className="user-info">
+                <i className="fas fa-user-circle"></i>
+                <span>Welcome, <span className="user-name">{user.firstName} {user.lastName}</span></span>
+              </span>
+            )}
+            <button 
+              className="logout-btn" 
+              onClick={handleLogout}
+              title="Logout"
+            >
+              <i className="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+      </nav>
 
       <div className="container section-container">
         {/* App Header */}
@@ -676,7 +878,7 @@ const Welcome = () => {
         {/* Progress & Activity Graphs */}
         <div className="card mt-4">
           <div className="d-flex justify-content-between align-items-center mb-3">
-            <h3>📈 Nutrition Progress Overview</h3>
+            <h3>📊 Nutrition Distribution</h3>
             <div className="btn-group">
               <button
                 className={`btn ${timePeriod === "day" ? "btn-primary" : "btn-outline-primary"}`}
@@ -705,7 +907,15 @@ const Welcome = () => {
             </div>
           </div>
           <div className="chart-container" style={{ height: "400px" }}>
-            <Line data={progressData} options={options} />
+            <Pie data={pieData} options={pieOptions} />
+          </div>
+          <div className="text-center mt-3">
+            <p className="text-muted">
+              {timePeriod === "day" && "Showing today's nutrition distribution"}
+              {timePeriod === "week" && "Showing this week's nutrition distribution"}
+              {timePeriod === "month" && "Showing this month's nutrition distribution"}
+              {timePeriod === "year" && "Showing this year's nutrition distribution"}
+            </p>
           </div>
         </div>
 

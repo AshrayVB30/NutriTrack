@@ -4,6 +4,7 @@ import axios from "../utils/axios";
 
 const Profile = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
   const [profile, setProfile] = useState({
     age: "",
     weight: "",
@@ -80,7 +81,7 @@ const Profile = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post('/auth/profile', {
+      const response = await axios.post('/api/auth/profile', {
         ...profile
       }, {
         headers: {
@@ -107,7 +108,24 @@ const Profile = () => {
     const token = localStorage.getItem('token');
     if (!token) {
       navigate('/signin');
+      return;
     }
+
+    // Fetch user information
+    const fetchUserInfo = async () => {
+      try {
+        const response = await axios.get('/api/auth/profile', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        setUser(response.data.user);
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+      }
+    };
+
+    fetchUserInfo();
   }, [isDarkMode, navigate]);
 
   return (
@@ -184,11 +202,23 @@ const Profile = () => {
           border-radius: 10px;
           margin-bottom: 15px;
         }
+        .welcome-message {
+          font-size: 1.2rem;
+          text-align: center;
+          margin-bottom: 20px;
+          color: var(--highlight-color);
+          font-weight: bold;
+        }
       `}</style>
 
       <section className="background-radial-gradient">
         <div className="profile-card">
           <h2 className="profile-title">👤 Your Profile</h2>
+          {user && (
+            <p className="welcome-message">
+              Welcome, {user.firstName} {user.lastName}! 👋
+            </p>
+          )}
           {error && <p className="error-message">⚠️ {error}</p>}
           {goalMessage && <p className="goal-message">📊 {goalMessage}</p>}
 

@@ -2,10 +2,17 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+# Copy package files
 COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
+# Copy all files
 COPY . .
 
+# Expose port 5000
 EXPOSE 5000
-CMD ["node", "index.js"]
+
+# Start the application
+CMD ["npm", "start"]
